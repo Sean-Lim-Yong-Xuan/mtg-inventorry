@@ -1,151 +1,350 @@
-import streamlit as st
+from tokenize import String
+from pymongo import MongoClient
+from pprint import pprint
 import pandas as pd
-import math
-from pathlib import Path
+import json
+import os
 
-# Set the title and favicon that appear in the Browser's tab bar.
-st.set_page_config(
-    page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
-)
+#-------------------------------#
+#--------Initialization---------#
+#-------------------------------#
 
-# -----------------------------------------------------------------------------
-# Declare some useful functions.
+##initialize connection to the database (will not exist until something is loaded into it)
+client = MongoClient("localhost", 27017)
+db = client["mtgdb"]
+collection = db["cards"]
 
-@st.cache_data
-def get_gdp_data():
-    """Grab GDP data from a CSV file.
+#check if database is already loaded
+is_loaded = False
+dbnames = client.list_database_names()
+if 'mtgdb' in dbnames:
+    is_loaded = True
 
-    This uses caching to avoid having to read the file every time. If we were
-    reading from an HTTP endpoint instead of a file, it's a good idea to set
-    a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
-    """
+#-------------------------------#
+#-----------Functions-----------#
+#-------------------------------#
 
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
+#print logo (only at the start)
+def print_logo():
+    print("""
+  __  __ _____ ____       _       _        _                    
+ |  \/  |_   _/ ___|   __| | __ _| |_ __ _| |__   __ _ ___  ___ 
+ | |\/| | | || |  _   / _` |/ _` | __/ _` | '_ \ / _` / __|/ _ \ 
+ | |  | | | || |_| | | (_| | (_| | || (_| | |_) | (_| \__ \  __/
+ |_|  |_| |_| \____|  \__,_|\__,_|\__\__,_|_.__/ \__,_|___/\___|
+""")
 
-    MIN_YEAR = 1960
-    MAX_YEAR = 2022
+#print menu (after every command)
+def print_menu():
+    print("""
+_________________________________________________________________
+| 0 | Exit
+| 1 | Load database
+| 2 | Count cards in the database
+| 3 | Add a new card
+| 4 | Remove existing card
+| 5 | Search card by name
+| 6 | Filter cards by maximum mana cost and color
+| 7 | Retrieves the top 5 cards by power
+| 8 | Find card from description
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+""")
 
-    # The data above has columns like:
-    # - Country Name
-    # - Country Code
-    # - [Stuff I don't care about]
-    # - GDP for 1960
-    # - GDP for 1961
-    # - GDP for 1962
-    # - ...
-    # - GDP for 2022
-    #
-    # ...but I want this instead:
-    # - Country Name
-    # - Country Code
-    # - Year
-    # - GDP
-    #
-    # So let's pivot all those year-columns into two: Year and GDP
-    gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
-        [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-        'Year',
-        'GDP',
-    )
+#clear the terminal for a clean view (platform indipendent)
+def clear_terminal():
+    os.system('cls||clear')
 
-    # Convert years from string to integers
-    gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
+#1 - Load database
+def load_db():
+    with open("StandardCards.json") as json_db:
+        database = json.load(json_db)
+    collection.insert_one(database)
 
-    return gdp_df
+#2 - Count cards in the database
+def print_n_cards():
+    cards = collection.aggregate([
+        {"$project":
+            {"cards":
+                {"$map":
+                    {
+                        "input": {"$objectToArray": "$cards"},
+                        "in": "$$this.v"
+                    }
+                }
+            }
+        },
+        {"$unwind": "$cards"},
+        { "$group": { "_id": "$name" , "count": { "$sum": 1 } } },
+    ])
 
-gdp_df = get_gdp_data()
+    print("\n| Number of cards in the database: " +  str(cards.next()["count"]))
+1
+#3 - Add a new card
+def add_card(name, mana, power, colors, type, text):
+    collection.update_one({},{"$set":{"cards." + name:{"name": name, "convertedManaCost": float(mana), "power":power, "colors": colors, "type": type, "text": text}}})
 
-# -----------------------------------------------------------------------------
-# Draw the actual page
-
-# Set the title that appears at the top of the page.
-'''
-# :earth_americas: GDP dashboard
-
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
-
-# Add some spacing
-''
-''
-
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
-
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value])
-
-countries = gdp_df['Country Code'].unique()
-
-if not len(countries):
-    st.warning("Select at least one country")
-
-selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-''
-''
-''
-
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
-]
-
-st.header('GDP over time', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
-)
-
-''
-''
+#4 - Remove existing card
+def remove_card(name):
+    collection.update_one({},{"$unset":{"cards." + name:""}})
 
 
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
+#5 - Search card by name
+def search_card(name):
+    cards = collection.aggregate([
+        {"$project":
+            {"cards":
+                {"$map":
+                    {
+                        "input": {"$objectToArray": "$cards"},
+                        "in": "$$this.v"
+                    }
+                }
+            }
+        },
+        {"$unwind": "$cards"},
+        {"$match": {"cards.name": name}},
+        {"$project":
+            {
+                "_id": 0,
+                "cards.name": 1,
+                "cards.convertedManaCost": 1,
+                "cards.power":1,
+                "cards.colors": 1,
+                "cards.type": 1,
+                "cards.text": 1
+            }
+        },
+        {"$sort": {"cards.name": 1, "cards.convertedManaCost":1}},
+    ])
 
-st.header(f'GDP in {to_year}', divider='gray')
+    try:
+        print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        print(pd.DataFrame(cards.next()))
+    except:
+        print("| Card '" + name + "' not found")
 
-''
+#6 - Filter cards by maximum mana cost and color
+def filter_cards(mana, colors):
+    cards = collection.aggregate([
+        {"$project":
+            {"cards":
+                {"$map":
+                    {
+                        "input": {"$objectToArray": "$cards"},
+                        "in": "$$this.v"
+                    }
+                }
+            }
+        },
+        {"$unwind": "$cards"},
+        {"$match": {"$and": [{"cards.convertedManaCost": {"$lte": float(mana)}}, {"cards.colors": colors}]}},
+        {"$sort": {"cards.name": 1, "cards.convertedManaCost":1}},
+        {"$project":
+            {
+                "_id": 0,
+                "cards.name": 1,
+                "cards.convertedManaCost": 1,
+                "cards.power":1,
+                "cards.colors": 1,
+                "cards.type": 1,
+                "cards.text": 1
+            }
+        }
+    ])
 
-cols = st.columns(4)
+    for card in cards:
+        print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        print(pd.DataFrame(card))
 
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
+#7 - Retrieves the top 5 cards by power
+def filter_top():
+    cards = collection.aggregate([
+        {"$project":
+            {"cards":
+                {"$map":
+                    {
+                        "input": {"$objectToArray": "$cards"},
+                        "in": "$$this.v"
+                    }
+                }
+            }
+        },
+        {"$unwind": "$cards"},
+        {"$project":
+            {
+                "_id": 0,
+                "cards.name": 1,
+                "cards.convertedManaCost": 1,
+                "cards.power":1,
+                "cards.colors": 1,
+                "cards.type": 1,
+                "cards.text": 1
+            }
+        },
+        {"$sort": {"cards.power":-1}},
+        {"$limit": 5}
+    ])
 
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
+    for card in cards:
+        print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        print(pd.DataFrame(card))
 
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
+#8 - Find card from description
+def find_description(text):
+    cards = collection.aggregate([
+        {"$project":
+            {"cards":
+                {"$map":
+                    {
+                        "input": {"$objectToArray": "$cards"},
+                        "in": "$$this.v"
+                    }
+                }
+            }
+        },
+        {"$unwind": "$cards"},
+        {"$match": {"cards.text": {"$regex" : text}}},
+        {"$project":
+            {
+                "_id": 0,
+                "cards.name": 1,
+                "cards.convertedManaCost": 1,
+                "cards.power":1,
+                "cards.colors": 1,
+                "cards.type": 1,
+                "cards.text": 1
+            }
+        },
+        {"$sort": {"cards.name": 1, "cards.convertedManaCost":1}}
+    ])
+
+    for card in cards:
+        print("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+        print(pd.DataFrame(card))
+
+#-------------------------------#
+#-------------Start-------------#
+#-------------------------------#
+
+choice = -1
+
+clear_terminal()
+print_logo()
+
+while choice != 0:
+    print_menu()
+    choice = input(">> ")
+
+    if choice == "0": #0 - Exit
+        clear_terminal()
+        print_logo()
+        print("\n| Closing MTG database...\n")
+        break
+
+    elif choice == "1": #1 - Load database
+        clear_terminal()
+
+        if is_loaded == False:
+            load_db()
+            is_loaded = True
+            print("\n| Database loaded")
         else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
+            print("\n| Database already loaded")
 
-        st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
-        )
+    elif choice == "2": #2 - Count cards in the database
+        clear_terminal()
+
+        if is_loaded == False:
+            print("\n| No database found. Load it first with '1'")
+        else:
+            print_n_cards()
+
+    elif choice == "3": #3 - Add a new card
+        clear_terminal()
+        if is_loaded == False:
+            print("\n| No database found. Load it first with '1'")
+        else:
+            print("| Insert the name:")
+            name = input("| >> ")
+
+            print("| Insert the mana cost:")
+            mana = input("| >> ")
+
+            print("| Insert the power:")
+            power = input("| >> ")
+
+            print("| Insert the colors (separated by a comma ','):")
+            colors = input("| >> ")
+            colors = colors.split(",")
+
+            print("| Insert the type:")
+            type = input("| >> ")
+
+            print("| Insert the text:")
+            text = input("| >> ")
+
+            add_card(name, mana, power, colors, type, text)
+
+            print("| Card added")
+    
+    elif choice == "4": #4 - Remove existing card
+        clear_terminal()
+
+        if is_loaded == False:
+            print("\n| No database found. Load it first with '1'")
+        else:
+            print("| Insert the card name:")
+            name = input("| >> ")
+        
+            remove_card(name)
+
+            print("| Card removed")
+
+    elif choice == "5": #5 - Search card by name
+        clear_terminal()
+
+        if is_loaded == False:
+            print("\n| No database found. Load it first with '1'")
+        else:
+            print("| Insert the card name:")
+            name = input("| >> ")
+
+            search_card(name)
+
+    elif choice == "6": #6 - Filter cards by maximum mana cost and color
+        clear_terminal()
+
+        if is_loaded == False:
+            print("\n| No database found. Load it first with '1'")
+        else:
+            print("| Insert the mana cost:")
+            mana = input("| >> ")
+
+            print("| Insert the colors (separated by a comma ','):")
+            colors = input("| >> ")
+            colors = colors.split(",")
+
+            filter_cards(mana, colors)
+
+    elif choice == "7": #7 - Retrieves the top 5 cards by power
+        clear_terminal()
+
+        if is_loaded == False:
+            print("\n| No database found. Load it first with '1'")
+        else:
+            filter_top()
+
+    elif choice == "8": #8 - Find card from description
+        clear_terminal()
+
+        if is_loaded == False:
+            print("\n| No database found. Load it first with '1'")
+        else:
+            print("| Insert the word to search:")
+            text = input("| >> ")
+
+            find_description(text)
+
+    else: #Any other character - Wrong input
+        clear_terminal()
+        print("\n| No command associated with key " + str(choice) + ".")
