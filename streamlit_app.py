@@ -13,6 +13,8 @@ import os
 # MongoDB Connection
 MONGO_URI = "mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/"
 client = MongoClient(MONGO_URI)
+
+#Choosing the database and the collection
 db = client["mtgdb"]
 collection = db["cards"]
 
