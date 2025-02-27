@@ -20,10 +20,11 @@ db = client["mtgdb"]
 collection = db["cards"]
 
 #check if database is already loaded
-is_loaded = False
-dbnames = client.list_database_names()
-if 'mtgdb' in dbnames:
-    is_loaded = True
+#is_loaded = False
+#dbnames = client.list_database_names()
+#if 'mtgdb' in dbnames:
+    #is_loaded = True
+cards = list(collection.find({}, {"_id": 0}))
 
 #-------------------------------#
 #-----------Functions-----------#
