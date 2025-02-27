@@ -12,12 +12,12 @@ client = MongoClient(MONGO_URI)
 
 #Choosing the database and the collection
 db = client["mtgdb"]
-collection = db["cards"]
+collection = db["OTJ List"]
 
 # Streamlit App
 st.title ("🃏 MTG Card Inventory")
 
 # Fetch Data
-cards = list(collection.find({}, {"_id": 0}))
+OTJ List = list(collection.find({}, {"_id": 0}))
 
 
