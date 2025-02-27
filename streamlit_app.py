@@ -18,6 +18,6 @@ collection = db["otj-list"]
 st.title ("🃏 MTG Card Inventory")
 
 # Fetch Data
-otj-list = list(collection.find({}, {"_id": 0}))
+otj = list(collection.find({}, {"_id": 0}))
 
 
