@@ -18,6 +18,18 @@ collection = db["otj-list"]
 st.title ("🃏 MTG Card Inventory")
 
 # Fetch Data
-otj = list(collection.find({}, {"_id": 0}))
+cards = list(collection.find({}, {"_id": 0}))
 
-
+def display_data_from_mongodb():
+    """Displays data from MongoDB in Streamlit."""
+    try:
+        collection = db.get_collection("cards") 
+        data = list(collection.find())
+        if data:
+            df = pd.DataFrame(data)
+            df = df.drop(columns=['_id'], errors='ignore') #remove mongodb's _id
+            st.dataframe(df)
+        else:
+            st.info("No data found in MongoDB.")
+    except Exception as e:
+        st.error(f"Error retrieving data from MongoDB: {e}")
