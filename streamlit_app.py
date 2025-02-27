@@ -11,7 +11,7 @@ import os
 
 ##initialize connection to the database (will not exist until something is loaded into it)
 # MongoDB Connection
-MONGO_URI = "mongodb+srv://Sean:<WXN912345>@dahtebahse.ardug.mongodb.net/"
+MONGO_URI = "mongodb+srv://Sean:<123>@dahtebahse.ardug.mongodb.net/"
 client = MongoClient(MONGO_URI)
 db = client["mtgdb"]
 collection = db["cards"]
