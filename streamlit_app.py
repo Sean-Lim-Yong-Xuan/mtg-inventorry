@@ -11,10 +11,7 @@ client = MongoClient(MONGO_URI)
 
 #Choosing the database and the collection
 db = client["mtgdb"]
-collection = db["otj-list"]
-
-# Streamlit App
-st.title ("🃏 MTG Card Inventory")
+collection = db["cards"]
 
 # Fetch Data
 def load_data():
@@ -23,6 +20,9 @@ def load_data():
     return df
 
 df = load_data()
+
+# Streamlit App
+st.title ("🃏 MTG Card Inventory")
 
 # Search bar
 search_query = st.text_input("Search for a card:", "")
