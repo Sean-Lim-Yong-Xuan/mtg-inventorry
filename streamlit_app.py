@@ -11,12 +11,12 @@ client = MongoClient(MONGO_URI)
 
 #Choosing the database and the collection
 db = client["mtgdb"]
-collection = db["cards"]
+collection = db["otj-list"]
 
 # Fetch Data
 def load_data():
     cards = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
-    df = pd.DataFrame(cards)
+    df = pd.DataFrame(otj-list)
     return df
 
 df = load_data()
