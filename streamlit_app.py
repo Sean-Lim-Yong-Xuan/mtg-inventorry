@@ -1,5 +1,4 @@
 import streamlit as st
-from tokenize import String
 from pymongo import MongoClient
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -21,6 +20,8 @@ st.title ("🃏 MTG Card Inventory")
 cards = list(collection.find({}, {"_id": 0}))
 df = pd.DataFrame(cards)
     return df
+
+df = load_data()
 
 # Search bar
 search_query = st.text_input("Search for a card:", "")
