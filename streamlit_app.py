@@ -15,7 +15,7 @@ collection = db["otj-list"]
 
 # Fetch Data
 def load_data():
-    cards = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
+    otj-list = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
     df = pd.DataFrame(otj-list)
     return df
 
