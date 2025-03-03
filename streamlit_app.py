@@ -6,17 +6,25 @@ import plotly.express as px
 import seaborn as sns
 
 # MongoDB Connection
-MONGO_URI = "mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/"
-client = MongoClient(MONGO_URI)
+#MONGO_URI = "mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/"
+#client = MongoClient(MONGO_URI)
 
 #Choosing the database and the collection
-db = client["mtgdb"]
-collection = db["otj-list"]
+#db = client["mtgdb"]
+#collection = db["cards"]
+
+def get_database():
+    client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/")  # Replace with your connection string
+    db = client["mtgdb"]  # Replace with your database name
+    return db
+
+db = get_database()
+collection = db["cards"]  # Replace with your collection name
 
 # Fetch Data
 def load_data():
-    otj-list = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
-    df = pd.DataFrame(otj-list)
+    cards = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
+    df = pd.DataFrame(cards)
     return df
 
 df = load_data()
