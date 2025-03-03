@@ -17,9 +17,10 @@ collection = db["otj-list"]
 st.title ("🃏 MTG Card Inventory")
 
 # Fetch Data
-cards = list(collection.find({}, {"_id": 0}))
-df = pd.DataFrame(cards)
-return df
+def load_data():
+    cards = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
+    df = pd.DataFrame(cards)
+    return df
 
 df = load_data()
 
