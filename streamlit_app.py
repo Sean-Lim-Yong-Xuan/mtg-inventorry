@@ -19,7 +19,7 @@ st.title ("🃏 MTG Card Inventory")
 # Fetch Data
 cards = list(collection.find({}, {"_id": 0}))
 df = pd.DataFrame(cards)
-    return df
+return df
 
 df = load_data()
 
