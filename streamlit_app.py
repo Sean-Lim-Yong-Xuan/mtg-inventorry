@@ -19,12 +19,12 @@ def get_database():
     return db
 
 db = get_database()
-collection = db["cards"]  # Replace with your collection name
+collection = db["outlaws"]  # Replace with your collection name
 
 # Fetch Data
 def load_data():
-    cards = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
-    df = pd.DataFrame(cards)
+    outlaws = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
+    df = pd.DataFrame(outlaws)
     return df
 
 df = load_data()
