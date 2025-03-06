@@ -14,17 +14,17 @@ import seaborn as sns
 #collection = db["cards"]
 
 def get_database():
-    client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/")  # Replace with your connection string
-    db = client["mtgdb"]  # Replace with your database name
+    client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/") 
+    db = client["mtgdb"]
     return db
 
 db = get_database()
-collection = db["outlaws"]  # Replace with your collection name
+collection = db["cards"]
 
 # Fetch Data
 def load_data():
-    outlaws = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB's _id field
-    df = pd.DataFrame(outlaws)
+    cards = list(collection.find({}, {"_id": 0}))
+    df = pd.DataFrame(cards)
     return df
 
 df = load_data()
