@@ -28,7 +28,7 @@ st.title ("🃏 MTG Card Inventory")
     #return df
 
 #df = load_data()
-#cards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
+#allmtgcards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
 
 def display_data_from_mongodb():
     """Displays data from MongoDB in Streamlit."""
@@ -44,6 +44,7 @@ def display_data_from_mongodb():
     except Exception as e:
         st.error(f"Error retrieving data from MongoDB: {e}")
 
+allmtgcards = list(collection.find({}, {"_id": 0}))
 
 # Search bar
 search_query = st.text_input("Search for a card:", "")
