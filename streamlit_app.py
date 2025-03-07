@@ -13,10 +13,10 @@ import seaborn as sns
 #db = client["mtgdb"]
 #collection = db["cards"]
 
-
-client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/") 
-db = client["mtgdb"]
-collection = db["cards"]
+try:
+    client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/") 
+    db = client["mtgdb"]
+    collection = db["cards"]
 
 # Fetch Data
 #def load_data():
@@ -26,7 +26,11 @@ collection = db["cards"]
 
 #df = load_data()
 
-cards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
+    cards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
+except pymongo.errors.ServerSelectionTimeoutError as e:
+    st.error(f"Failed to connect to MongoDB: {e}")
+except Exception as e:
+    st.error(f"An unexpected error occurred: {e}")
 
 def display_data_from_mongodb():
     """Displays data from MongoDB in Streamlit."""
