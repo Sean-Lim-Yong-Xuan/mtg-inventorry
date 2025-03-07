@@ -1,20 +1,20 @@
 import streamlit as st
-from pymongo import MongoClient
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
+from pymongo import MongoClient
 
 # MongoDB Connection
-#MONGO_URI = "mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/"
-#client = MongoClient(MONGO_URI)
+MONGO_URI = "mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/"
+client = MongoClient(MONGO_URI)
 
 #Choosing the database and the collection
 #db = client["mtgdb"]
 #collection = db["cards"]
 
 
-client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/", serverSelectionTimeoutMS=5000)
+#client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/")
 db = client["mtgdb"]
 collection = db["allmtgcards"]
 
