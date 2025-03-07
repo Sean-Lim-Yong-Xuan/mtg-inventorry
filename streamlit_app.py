@@ -19,12 +19,12 @@ def get_database():
     return db
 
 db = get_database()
-collection = db["cards"]
+collection = db["outlaws"]
 
 # Fetch Data
 def load_data():
-    cards = list(collection.find({}, {"_id_": 0}))
-    df = pd.DataFrame(cards)
+    outlaws = list(collection.find({}, {"_id": 0}))
+    df = pd.DataFrame(outlaws)
     return df
 
 df = load_data()
