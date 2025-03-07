@@ -23,7 +23,7 @@ collection = db["cards"]
 
 # Fetch Data
 def load_data():
-    cards = list(collection.find({}, {"_id": 0}))
+    cards = list(collection.find({}, {"_id_": 0}))
     df = pd.DataFrame(cards)
     return df
 
