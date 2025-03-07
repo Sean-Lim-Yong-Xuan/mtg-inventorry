@@ -15,8 +15,8 @@ client = MongoClient(MONGO_URI)
 
 
 #client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/")
-db = client["mtgdb"]
-collection = db["allmtgcards"]
+db = client["magicku"]
+collection = db["outlaw"]
 
 # Streamlit App
 st.title("🃏 MTG Card Inventory")
@@ -28,12 +28,12 @@ st.title("🃏 MTG Card Inventory")
     #return df
 
 #df = load_data()
-allmtgcards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
+outlaw = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
 
 def display_data_from_mongodb():
     """Displays data from MongoDB in Streamlit."""
     try:
-        collection = db.get_collection("allmtgcards")  # Replace with your collection name
+        collection = db.get_collection("outlaw")  # Replace with your collection name
         data = list(collection.find())
         if data:
             df = pd.DataFrame(data)
@@ -45,9 +45,9 @@ def display_data_from_mongodb():
         st.error(f"Error retrieving data from MongoDB: {e}")
 
 #Fetching data...
-allmtgcards = list(collection.find({}, {"_id": 0}))
+outlaw = list(collection.find({}, {"_id": 0}))
 
-if allmtgcards:
+if outlaw:
     df = pd.DataFrame(allmtgcards)
     st.dataframe(df)
     # Search bar
