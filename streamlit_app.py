@@ -23,7 +23,7 @@ collection = db["outlaws"]
 
 # Fetch Data
 def load_data():
-    outlaws = list(collection.find({}, {"_id": 0}))
+    outlaws = list(collection.find({}))
     df = pd.DataFrame(outlaws)
     return df
 
