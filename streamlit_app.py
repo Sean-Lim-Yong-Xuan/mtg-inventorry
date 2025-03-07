@@ -16,7 +16,7 @@ import seaborn as sns
 
 client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/") 
 db = client["mtgdb"]
-collection = db["cards"]
+collection = db["allmtgcards"]
 
 # Streamlit App
 st.title ("🃏 MTG Card Inventory")
@@ -33,7 +33,7 @@ st.title ("🃏 MTG Card Inventory")
 def display_data_from_mongodb():
     """Displays data from MongoDB in Streamlit."""
     try:
-        collection = db.get_collection("cards")  # Replace with your collection name
+        collection = db.get_collection("allmtgcards")  # Replace with your collection name
         data = list(collection.find())
         if data:
             df = pd.DataFrame(data)
