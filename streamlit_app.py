@@ -19,7 +19,7 @@ db = client["mtgdb"]
 collection = db["allmtgcards"]
 
 # Streamlit App
-st.title ("🃏 MTG Card Inventory")
+st.title("🃏 MTG Card Inventory")
 
 # Fetch Data
 #def load_data():
