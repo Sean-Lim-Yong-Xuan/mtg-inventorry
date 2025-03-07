@@ -34,7 +34,7 @@ def display_data_from_mongodb():
     """Displays data from MongoDB in Streamlit."""
     try:
         collection = db.get_collection("allmtgcards")  # Replace with your collection name
-        data = list(collection.find())
+        data = list(collection.find({}, {"_id": 0}))
         if data:
             df = pd.DataFrame(data)
             df = df.drop(columns=['_id'], errors='ignore') #remove mongodb's _id
@@ -44,7 +44,7 @@ def display_data_from_mongodb():
     except Exception as e:
         st.error(f"Error retrieving data from MongoDB: {e}")
 
-allmtgcards = list(collection.find({}, {"_id": 0}))
+#allmtgcards = list(collection.find({}, {"_id": 0}))
 
 # Search bar
 search_query = st.text_input("Search for a card:", "")
