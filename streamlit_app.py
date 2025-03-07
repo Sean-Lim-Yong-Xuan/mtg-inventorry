@@ -19,15 +19,15 @@ def get_database():
     return db
 
 db = get_database()
-collection = db["outlaws"]
+collection = db["cards"]
 
 # Fetch Data
 def load_data():
-    outlaws = list(collection.find({}))
-    df = pd.DataFrame(outlaws)
+    #cards = list(collection.find({}, {"_id":0}))
+    df = pd.DataFrame(cards)
     return df
 
-df = load_data()
+#df = load_data()
 
 # Streamlit App
 st.title ("🃏 MTG Card Inventory")
