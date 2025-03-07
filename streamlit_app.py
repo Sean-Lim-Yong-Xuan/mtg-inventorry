@@ -22,12 +22,28 @@ db = get_database()
 collection = db["cards"]
 
 # Fetch Data
-def load_data():
+#def load_data():
     #cards = list(collection.find({}, {"_id":0}))
-    df = pd.DataFrame(cards)
-    return df
+    #df = pd.DataFrame(cards)
+    #return df
 
 #df = load_data()
+
+cards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
+
+def display_data_from_mongodb():
+    """Displays data from MongoDB in Streamlit."""
+    try:
+        collection = db.get_collection("cards")  # Replace with your collection name
+        data = list(collection.find())
+        if data:
+            df = pd.DataFrame(data)
+            df = df.drop(columns=['_id'], errors='ignore') #remove mongodb's _id
+            st.dataframe(df)
+        else:
+            st.info("No data found in MongoDB.")
+    except Exception as e:
+        st.error(f"Error retrieving data from MongoDB: {e}")
 
 # Streamlit App
 st.title ("🃏 MTG Card Inventory")
