@@ -29,12 +29,12 @@ st.title ("🃏 MTG Card Inventory")
 
 #df = load_data()
 
-cards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
+outlaws = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
 
 def display_data_from_mongodb():
     """Displays data from MongoDB in Streamlit."""
     try:
-        collection = db.get_collection("cards")  # Replace with your collection name
+        collection = db.get_collection("outlaws")  # Replace with your collection name
         data = list(collection.find())
         if data:
             df = pd.DataFrame(data)
