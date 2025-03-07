@@ -14,7 +14,7 @@ import seaborn as sns
 #collection = db["cards"]
 
 
-client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/") 
+client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/", serverSelectionTimeout=5000)
 db = client["mtgdb"]
 collection = db["allmtgcards"]
 
