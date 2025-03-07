@@ -13,12 +13,9 @@ import seaborn as sns
 #db = client["mtgdb"]
 #collection = db["cards"]
 
-def get_database():
-    client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/") 
-    db = client["mtgdb"]
-    return db
 
-db = get_database()
+client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/") 
+db = client["mtgdb"]
 collection = db["cards"]
 
 # Fetch Data
