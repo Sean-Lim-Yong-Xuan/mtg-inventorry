@@ -6,7 +6,7 @@ import seaborn as sns
 from pymongo import MongoClient
 
 # MongoDB Connection
-MONGO_URI = "mongodb+srv://Shiranui:1234@magicdahtebahse.lfcpi.mongodb.net/"
+MONGO_URI = "mongodb+srv://Cluster0:123@cluster0.wi9dl.mongodb.net/"
 client = MongoClient(MONGO_URI)
 
 #Choosing the database and the collection
@@ -15,8 +15,8 @@ client = MongoClient(MONGO_URI)
 
 
 #client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/")
-db = client["magicku"]
-collection = db["outlaw"]
+db = client["mtgdb"]
+collection = db["allmtgcards"]
 
 # Streamlit App
 st.title("🃏 MTG Card Inventory")
@@ -28,12 +28,12 @@ st.title("🃏 MTG Card Inventory")
     #return df
 
 #df = load_data()
-outlaw = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
+allmtgcards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
 
 def display_data_from_mongodb():
     """Displays data from MongoDB in Streamlit."""
     try:
-        collection = db.get_collection("outlaw")  # Replace with your collection name
+        collection = db.get_collection("allmtgcards")  # Replace with your collection name
         data = list(collection.find())
         if data:
             df = pd.DataFrame(data)
@@ -45,9 +45,9 @@ def display_data_from_mongodb():
         st.error(f"Error retrieving data from MongoDB: {e}")
 
 #Fetching data...
-outlaw = list(collection.find({}, {"_id": 0}))
+allmtgcards = list(collection.find({}, {"_id": 0}))
 
-if outlaw:
+if allmtgcards:
     df = pd.DataFrame(allmtgcards)
     st.dataframe(df)
     # Search bar
