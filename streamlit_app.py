@@ -73,7 +73,7 @@ if allmtgcards:
     if selected_colors:
         filtered_df = filtered_df[filtered_df["color_identity"].isin(selected_colors)]
     if selected_power:
-        filtered_df = filtered_df[filtered_df["cpower"].isin(selected_power)]
+        filtered_df = filtered_df[filtered_df["power"].isin(selected_power)]
     
     st.write(f"### Showing {len(filtered_df)} results")
     st.dataframe(filtered_df)
