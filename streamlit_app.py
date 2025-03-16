@@ -6,7 +6,8 @@ import seaborn as sns
 from pymongo import MongoClient
 
 # MongoDB Connection
-MONGO_URI = "mongodb+srv://Cluster0:123@cluster0.wi9dl.mongodb.net/"
+#MONGO_URI = "mongodb+srv://Cluster0:123@cluster0.wi9dl.mongodb.net/"
+MONGO_URI = "mongodb+srv://Shiranui:1234@magicdahtebahse.lfcpi.mongodb.net/"
 client = MongoClient(MONGO_URI)
 
 #Choosing the database and the collection
