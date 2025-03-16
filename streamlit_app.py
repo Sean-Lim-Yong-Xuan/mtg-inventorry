@@ -56,7 +56,7 @@ if allmtgcards:
     # Filter options
     card_types = df["type"].dropna().unique().tolist()
     name = df["name"].dropna().unique().tolist()
-    colors = df["color"].dropna().unique().tolist()
+    colors = df["color_identity"].dropna().unique().tolist()
     power = df["power"].dropna().unique().tolist()
     
     selected_type = st.multiselect("Filter by Type:", card_types)
@@ -71,7 +71,7 @@ if allmtgcards:
     if selected_type:
         filtered_df = filtered_df[filtered_df["type"].isin(selected_type)]
     if selected_colors:
-        filtered_df = filtered_df[filtered_df["color"].isin(selected_colors)]
+        filtered_df = filtered_df[filtered_df["color_identity"].isin(selected_colors)]
     if selected_power:
         filtered_df = filtered_df[filtered_df["cpower"].isin(selected_power)]
     
@@ -79,10 +79,10 @@ if allmtgcards:
     st.dataframe(filtered_df)
     
     # Visualization
-    chart_option = st.selectbox("Select a chart type:", ["Color Distribution", "Type Distribution", "Power Distribution"])
+    chart_option = st.selectbox("Select a chart type:", ["Color Identity Distribution", "Type Distribution", "Power Distribution"])
     
     if chart_option == "Color Distribution":
-        fig = px.bar(filtered_df["color"].value_counts().reset_index(), x="index", y="Color", title="Color Distribution")
+        fig = px.bar(filtered_df["color_identity"].value_counts().reset_index(), x="index", y="Color", title="Color Identity Distribution")
     elif chart_option == "Type Distribution":
         fig = px.bar(filtered_df["type"].value_counts().reset_index(), x="index", y="Type", title="Type Distribution")
     elif chart_option == "Power Distribution":
