@@ -82,9 +82,10 @@ if allmtgcards:
     chart_option = st.selectbox("Select a chart type:", ["Color Identity Distribution", "Type Distribution", "Power Distribution"])
     
     if chart_option == "Color Distribution":
-        fig = px.bar(filtered_df["color_identity"].value_counts().reset_index(), x="index", y="Color", title="Color Identity Distribution")
-        st.plotly_chart(fig)
+        fig = px.bar(filtered_df["color_identity"].value_counts().reset_index(), x="count", y="Color", title="Color Identity Distribution")
     elif chart_option == "Type Distribution":
-        fig = px.bar(filtered_df["type"].value_counts().reset_index(), x="index", y="Type", title="Type Distribution")
+        fig = px.bar(filtered_df["type"].value_counts().reset_index(), x="count", y="Type", title="Type Distribution")
     elif chart_option == "Power Distribution":
-        fig = px.bar(filtered_df["power"].value_counts().reset_index(), x="index", y="Power", title="Power Distribution")
+        fig = px.bar(filtered_df["power"].value_counts().reset_index(), x="count", y="Power", title="Power Distribution")
+
+    st.pyplot(fig)
