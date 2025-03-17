@@ -36,10 +36,9 @@ def display_data_from_mongodb():
         collection = db.get_collection("allmtgcards")  # Replace with your collection name
         data = list(collection.find())
         if data:
-            #df = pd.DataFrame(data)
-            #df = df.drop(columns=['_id'], errors='ignore') #remove mongodb's _id
-            #st.dataframe(df)
-            st.write("Successfully connected to MongoDB!!")
+            df = pd.DataFrame(data)
+            df = df.drop(columns=['_id'], errors='ignore') #remove mongodb's _id
+            st.dataframe(df)
         else:
             st.info("No data found in MongoDB.")
     except Exception as e:
@@ -49,8 +48,7 @@ def display_data_from_mongodb():
 allmtgcards = list(collection.find({}, {"_id": 0}))
 
 if allmtgcards:
-    df = pd.DataFrame(allmtgcards)
-    st.dataframe(df)
+    st.info("Successfully connected to MongoDB!!")
     # Search bar
     search_query = st.text_input("Search for a card:", "")
     
