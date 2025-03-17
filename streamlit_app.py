@@ -88,5 +88,5 @@ if allmtgcards:
         #fig = px.bar(filtered_df["type"].value_counts().reset_index(), x="count", y="Type", title="Type Distribution")
     #elif chart_option == "Power Distribution":
         #fig = px.bar(filtered_df["power"].value_counts().reset_index(), x="count", y="Power", title="Power Distribution")
-else
+else:
     st.warning ("NO DATA FOUND!")
