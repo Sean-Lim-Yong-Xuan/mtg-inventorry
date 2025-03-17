@@ -80,7 +80,7 @@ if allmtgcards:
     # Visualization
     chart_option = st.selectbox("Select a chart type:", ["Color Identity Distribution", "Type Distribution", "Power Distribution"])
     
-    if chart_option == "Color Distribution":
+    if chart_option == "Color Identity Distribution":
         st.write ("Data Obtained")
         fig = px.bar(filtered_df["color_identity"].value_counts().reset_index(), x="count", y="Color", title="Color Identity Distribution")
         st.plotly_chart(fig)
