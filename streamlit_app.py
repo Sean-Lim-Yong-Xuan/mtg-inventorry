@@ -36,9 +36,10 @@ def display_data_from_mongodb():
         collection = db.get_collection("allmtgcards")  # Replace with your collection name
         data = list(collection.find())
         if data:
-            df = pd.DataFrame(data)
-            df = df.drop(columns=['_id'], errors='ignore') #remove mongodb's _id
-            st.dataframe(df)
+            #df = pd.DataFrame(data)
+            #df = df.drop(columns=['_id'], errors='ignore') #remove mongodb's _id
+            #st.dataframe(df)
+            st.info ("Successfully connected to MongoDB!!")
         else:
             st.info("No data found in MongoDB.")
     except Exception as e:
@@ -55,12 +56,10 @@ if allmtgcards:
     
     # Filter options
     card_types = df["type"].dropna().unique().tolist()
-    name = df["name"].dropna().unique().tolist()
     colors = df["color_identity"].dropna().unique().tolist()
     power = df["power"].dropna().unique().tolist()
     
     selected_type = st.multiselect("Filter by Type:", card_types)
-    selected_name = st.multiselect("Filter by Name:", name)
     selected_colors = st.multiselect("Filter by Color:", colors)
     selected_power = st.multiselect("Filter by Power:", power)
     
