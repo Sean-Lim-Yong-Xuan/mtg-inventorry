@@ -48,6 +48,7 @@ def display_data_from_mongodb():
 allmtgcards = list(collection.find({}, {"_id": 0}))
 
 if allmtgcards:
+    df = pd.DataFrame(allmtgcards)
     st.info("Successfully connected to MongoDB!!")
     # Search bar
     search_query = st.text_input("Search for a card:", "")
