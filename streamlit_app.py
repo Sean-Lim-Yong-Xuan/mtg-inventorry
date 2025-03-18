@@ -97,6 +97,14 @@ if allmtgcards:
                 fig = px.pie(grouped_df, values=value_column, names=category_column, title=f"Pie Chart of {value_column} by {category_column}")
                 #st.plotly_chart(fig)
         #fig = px.bar(filtered_df["power"].value_counts().reset_index(), x="power", y="count", title="Power Distribution")
+            except KeyError:
+                st.error("Selected columns not found in DataFrame.")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+
+        else:
+            st.warning("No value was found")
+            
     else:
         st.write ("No chart.")
 
