@@ -83,9 +83,9 @@ if allmtgcards:
         st.write ("Data Obtained")
         fig = px.bar(filtered_df["color_identity"].value_counts().reset_index(), x="color_identity", y="count", title="Color Identity Distribution")
     elif chart_option == "Type Distribution":
-        fig = px.bar(filtered_df["type"].value_counts().reset_index(), x="Type", y="count", title="Type Distribution")
+        fig = px.bar(filtered_df["type"].value_counts().reset_index(), x="type", y="count", title="Type Distribution")
     elif chart_option == "Power Distribution":
-        fig = px.bar(filtered_df["power"].value_counts().reset_index(), x="Power", y="count", title="Power Distribution")
+        fig = px.bar(filtered_df["power"].value_counts().reset_index(), x="power", y="count", title="Power Distribution")
     else:
         st.write ("No chart.")
 
