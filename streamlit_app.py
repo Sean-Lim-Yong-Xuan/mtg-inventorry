@@ -85,24 +85,9 @@ if allmtgcards:
     elif chart_option == "Type Distribution":
         fig = px.bar(filtered_df["type"].value_counts().reset_index(), x="type", y="count", title="Type Distribution")
     elif chart_option == "Power Distribution":
-        category_column = st.selectbox("count", df.columns)
-        value_column = st.selectbox("power", df.columns)
-
-        if category_column and value_column:
-            try:
-                # Group by category and sum the values
-                grouped_df = df.groupby(category_column)[value_column].sum().reset_index()
-
-                # Create the pie chart
-                fig = px.pie(grouped_df, values=value_column, names=category_column, title=f"Pie Chart of {value_column} by {category_column}")
-                #st.plotly_chart(fig)
-        #fig = px.bar(filtered_df["power"].value_counts().reset_index(), x="power", y="count", title="Power Distribution")
-            except KeyError:
-                st.error("Selected columns not found in DataFrame.")
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-        else:
-            st.warning("No value was found")        
+        grouped_df = df.groupby(category_column)[value_column].sum().reset_index()
+        # Create the pie chart
+        fig = px.pie(grouped_df, values="count", names="power", title=f"Pie Chart of Cards by Power")      
     else:
         st.write ("No chart.")
 
