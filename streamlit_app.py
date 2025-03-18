@@ -85,7 +85,7 @@ if allmtgcards:
     elif chart_option == "Type Distribution":
         fig = px.bar(filtered_df["type"].value_counts().reset_index(), x="type", y="count", title="Type Distribution")
     elif chart_option == "Power Distribution":
-        grouped_df = df.groupby("count")["power"].sum().reset_index()
+        grouped_df = df.groupby["power"].sum().reset_index()
         # Create the pie chart
         fig = px.pie(grouped_df, values="count", names="power", title=f"Pie Chart of Cards by Power")      
     else:
