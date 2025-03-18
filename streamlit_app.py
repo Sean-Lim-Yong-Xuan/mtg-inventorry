@@ -101,10 +101,8 @@ if allmtgcards:
                 st.error("Selected columns not found in DataFrame.")
             except Exception as e:
                 st.error(f"An error occurred: {e}")
-
         else:
-            st.warning("No value was found")
-            
+            st.warning("No value was found")        
     else:
         st.write ("No chart.")
 
