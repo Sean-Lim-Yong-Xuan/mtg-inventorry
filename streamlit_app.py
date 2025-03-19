@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import plotly.express as px
-import seaborn as sns
 import pymongo
 from pymongo import MongoClient
 
