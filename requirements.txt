@@ -2,5 +2,4 @@ streamlit
 pandas
 pymongo
 matplotlib
-seaborn
 plotly
