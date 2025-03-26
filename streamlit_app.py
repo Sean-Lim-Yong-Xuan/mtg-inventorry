@@ -60,11 +60,11 @@ if allmtgcards:
             "query": search_query,
             "timestamp": datetime.datetime.utcnow()
         }
-        db["search_queries"].insert_one(search_data)  # Store search query in MongoDB Atlas
+        collection.insert_one(search_data)  # Store search query in MongoDB Atlas
         st.success(f"Search query '{search_query}' stored successfully!")
         # Display past searches
         st.subheader("Recent Searches")
-        search_history = list(db["search_queries"].find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
+        search_history = list(collection.find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
         if search_history:
             for search in search_history:
                 st.write(f"🔎 {search.get('query', 'N/A')} (Searched on: {search.get("timestamp", 'Unknown')})")
