@@ -66,6 +66,14 @@ if allmtgcards:
     filtered_df = df.copy()
     if search_query:
         filtered_df = filtered_df[filtered_df["name"].str.contains(search_query, case=False, na=False)]
+        search_data = {
+            "query": search_query,
+            "timestamp": datetime.datetime.utcnow()
+        }
+        collection.insert_one(search_data)  # Store search query in MongoDB Atlas
+        st.success(f"Search query '{search_query}' stored successfully!")
+    else:
+        st.warning("Please enter a search term.")
     if selected_type:
         filtered_df = filtered_df[filtered_df["type"].isin(selected_type)]
     if selected_colors:
