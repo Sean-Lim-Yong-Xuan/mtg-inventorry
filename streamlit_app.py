@@ -11,22 +11,11 @@ MONGO_URI = "mongodb+srv://Shiranui:1234@theproject.lfcpi.mongodb.net/"
 client = MongoClient(MONGO_URI)
 
 #Choosing the database and the collection
-#db = client["mtgdb"]
-#collection = db["cards"]
-
-
-#client = MongoClient("mongodb+srv://Sean:12345@magicdahtebahse.lfcpi.mongodb.net/")
 db = client["mtgdb"]
 collection = db["allmtgcards"]
 
 # Streamlit App
 st.title("🃏 MTG Card Inventory")
-
-# Fetch Data
-#def load_data():
-    #cards = list(collection.find({}, {"_id":0}))
-    #df = pd.DataFrame(cards)
-    #return df
 
 #df = load_data()
 allmtgcards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
@@ -49,7 +38,6 @@ def display_data_from_mongodb():
 allmtgcards = list(collection.find({}, {"_id": 0}))
 
 if allmtgcards:
-    querycollection = db["search_queries"]
     df = pd.DataFrame(allmtgcards)
     st.info("Successfully connected to MongoDB!!")
     # Search bar
@@ -72,11 +60,11 @@ if allmtgcards:
             "query": search_query,
             "timestamp": datetime.datetime.utcnow()
         }
-        querycollection.insert_one(search_data)  # Store search query in MongoDB Atlas
+        db["search_queries"].insert_one(search_data)  # Store search query in MongoDB Atlas
         st.success(f"Search query '{search_query}' stored successfully!")
         # Display past searches
         st.subheader("Recent Searches")
-        search_history = list(querycollection.find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
+        search_history = list(db["search_queries"].find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
         if search_history:
             for search in search_history:
                 st.write(f"🔎 {search.get('query', 'N/A')} (Searched on: {search.get("timestamp", 'Unknown')})")
