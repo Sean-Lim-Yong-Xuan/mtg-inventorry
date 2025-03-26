@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import pymongo
+import datetime
 from pymongo import MongoClient
 
 # MongoDB Connection
@@ -68,7 +69,7 @@ if allmtgcards:
         filtered_df = filtered_df[filtered_df["name"].str.contains(search_query, case=False, na=False)]
         search_data = {
             "query": search_query,
-            "timestamp": datetime.datetime.utcnow()
+            "timestamp": datetime.utcnow()
         }
         collection.insert_one(search_data)  # Store search query in MongoDB Atlas
         st.success(f"Search query '{search_query}' stored successfully!")
