@@ -73,8 +73,15 @@ if allmtgcards:
         }
         collection.insert_one(search_data)  # Store search query in MongoDB Atlas
         st.success(f"Search query '{search_query}' stored successfully!")
-    else:
-        st.warning("Please enter a search term.")
+        # Display past searches
+        st.subheader("Recent Searches")
+        search_history = list(collection.find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
+        if search_history:
+            for search in search_history:
+                st.write(f"🔎 {search['query']} (Searched on: {search['timestamp']})")
+        else:
+            st.info("No search history found.")
+            
     if selected_type:
         filtered_df = filtered_df[filtered_df["type"].isin(selected_type)]
     if selected_colors:
