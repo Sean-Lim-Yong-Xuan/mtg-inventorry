@@ -56,21 +56,21 @@ if allmtgcards:
     filtered_df = df.copy()
     if search_query:
         filtered_df = filtered_df[filtered_df["name"].str.contains(search_query, case=False, na=False)]
-        #search_data = {
-            #"query": search_query,
-            #"timestamp": datetime.datetime.utcnow()
-        #}
-        #collection.insert_one(search_data)  # Store search query in MongoDB Atlas
-        #st.success(f"Search query '{search_query}' stored successfully!")
+        search_data = {
+            "query": search_query,
+            "timestamp": datetime.datetime.utcnow()
+        }
+        collection.insert_one(search_data)  # Store search query in MongoDB Atlas
+        st.success(f"Search query '{search_query}' stored successfully!")
         # Display past searches
-        #st.subheader("Recent Searches")
-        #search_history = list(collection.find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
-        #if search_history:
-            #for search in search_history:
-                #st.write(f"🔎 {search.get('query', 'N/A')} (Searched on: {search.get("timestamp", 'Unknown')})")
+        st.subheader("Recent Searches")
+        search_history = list(collection.find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
+        if search_history:
+            for search in search_history:
+                st.write(f"🔎 {search.get('query', 'N/A')} (Searched on: {search.get("timestamp", 'Unknown')})")
 
-        #else:
-            #st.info("No search history found.")
+        else:
+            st.info("No search history found.")
             
     if selected_type:
         filtered_df = filtered_df[filtered_df["type"].isin(selected_type)]
