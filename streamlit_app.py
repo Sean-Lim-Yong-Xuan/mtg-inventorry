@@ -78,7 +78,9 @@ if allmtgcards:
         search_history = list(collection.find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
         if search_history:
             for search in search_history:
-                st.write(f"🔎 {search["query"]} (Searched on: {search["timestamp"]})")
+                #st.write(f"🔎 {search["query"]} (Searched on: {search["timestamp"]})")
+                st.write(f"🔎 {search.get("query", 'N/A')} (Searched on: {search.get("timestamp", 'Unknown')})")
+
         else:
             st.info("No search history found.")
             
