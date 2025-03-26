@@ -55,7 +55,7 @@ if allmtgcards:
     # Apply filters
     filtered_df = df.copy()
     if search_query:
-        #filtered_df = filtered_df[filtered_df["name"].str.contains(search_query, case=False, na=False)]
+        filtered_df = filtered_df[filtered_df["name"].str.contains(search_query, case=False, na=False)]
         #search_data = {
             #"query": search_query,
             #"timestamp": datetime.datetime.utcnow()
