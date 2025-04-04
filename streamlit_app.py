@@ -62,13 +62,27 @@ if allmtgcards:
         }
         collection.insert_one(search_data)  # Store search query in MongoDB Atlas
         st.success(f"Search query '{search_query}' stored successfully!")
+        
         # Display past searches
-        st.subheader("Recent Searches")
-        search_history = list(collection.find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
-        if search_history:
-            for search in search_history:
-                st.write(f"🔎 {search.get('query', 'N/A')} (Searched on: {search.get("timestamp", 'Unknown')})")
+        #st.subheader("Recent Searches")
+        #search_history = list(collection.find({}, {"_id": 0}).sort("timestamp", -1).limit(10))  # Get last 10 searches
+        #if search_history:
+            #for search in search_history:
+                #st.write(f"🔎 {search.get('query', 'N/A')} (Searched on: {search.get("timestamp", 'Unknown')})")
+        st.subheader("🔍 Search Trends (Alphabetically Ordered)")
 
+        # Aggregation Pipeline to Count Searches and Sort Alphabetically
+        pipeline = [
+            {"$group": {"_id": "$query", "count": {"$sum": 1}}},  # Count occurrences
+            {"$sort": {"_id": 1}}  # Sort by card name alphabetically
+        ]
+
+        search_stats = list(collection.aggregate(pipeline))
+
+        if search_stats:
+            for entry in search_stats:
+            st.write(f"🔹 **{entry['_id']}** - Searched **{entry['count']}** times")
+        
         else:
             st.info("No search history found.")
             
