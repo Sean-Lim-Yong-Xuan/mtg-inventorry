@@ -71,7 +71,7 @@ if allmtgcards:
                 #st.write(f"🔎 {search.get('query', 'N/A')} (Searched on: {search.get("timestamp", 'Unknown')})")
         st.subheader("🔍 Search Trends (Alphabetically Ordered)")
 
-        # Aggregation Pipeline to Count Searches and Sort Alphabetically
+        # Aggregation Pipeline to count searches and sort Alphabetically
         pipeline = [
             {"$group": {"_id": "$query", "count": {"$sum": 1}}},  # Count occurrences
             {"$sort": {"_id": 1}}  # Sort by card name alphabetically
