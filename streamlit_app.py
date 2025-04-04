@@ -81,7 +81,7 @@ if allmtgcards:
 
         if search_stats:
             for entry in search_stats:
-            st.write(f"🔹 **{entry['_id']}** - Searched **{entry['count']}** times")
+                st.write(f"🔹 **{entry['_id']}** - Searched **{entry['count']}** times")
         
         else:
             st.info("No search history found.")
