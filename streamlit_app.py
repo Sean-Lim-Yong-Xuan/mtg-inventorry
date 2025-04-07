@@ -6,7 +6,6 @@ import datetime
 from pymongo import MongoClient
 
 # MongoDB Connection
-#MONGO_URI = "mongodb+srv://Cluster0:123@cluster0.wi9dl.mongodb.net/"
 MONGO_URI = "mongodb+srv://Shiranui:1234@theproject.lfcpi.mongodb.net/"
 client = MongoClient(MONGO_URI)
 
@@ -18,16 +17,16 @@ collection = db["allmtgcards"]
 st.title("🃏 MTG Card Inventory")
 
 #df = load_data()
-allmtgcards = list(collection.find({}, {"_id": 0}))  # Exclude ObjectId
+allmtgcards = list(collection.find({}, {"_id": 0}))
 
 def display_data_from_mongodb():
     """Displays data from MongoDB in Streamlit."""
     try:
-        collection = db.get_collection("allmtgcards")  # Replace with your collection name
+        collection = db.get_collection("allmtgcards")
         data = list(collection.find())
         if data:
             df = pd.DataFrame(data)
-            df = df.drop(columns=['_id'], errors='ignore') #remove mongodb's _id
+            df = df.drop(columns=['_id'], errors='ignore')
             st.dataframe(df)
         else:
             st.info("No data found in MongoDB.")
