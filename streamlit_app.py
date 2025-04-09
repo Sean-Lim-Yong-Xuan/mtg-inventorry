@@ -14,7 +14,7 @@ db = client["mtgdb"]
 collection = db["allmtgcards"]
 
 # Streamlit App
-st.title("🃏 MTG Card Inventory")
+st.title("🃏 MTG Information Hub")
 
 #df = load_data()
 allmtgcards = list(collection.find({}, {"_id": 0}))
